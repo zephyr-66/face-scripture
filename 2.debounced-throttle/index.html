@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>debounced-throttle</title>
+  </head>
+  <body>
+    <div id="app">
+      <button id="btn">fetch</button>
+    </div>
+    <script>
+      /**
+       * @description 防抖函数
+       * @param func 传入函数
+       * @param delay 指定时间，默认1000ms
+       */
+      function debounced(func, delay = 2000) {
+        if (func.constructor !== Function) {
+          throw new Error("func no function");
+        }
+        let timer = null;
+        return function () {
+          const self = this;
+          const args = arguments;
+          if (timer !== null) {
+            console.log("清除");
+            clearTimeout(timer);
+          }
+          timer = setTimeout(() => {
+            func.apply(self, args);
+          }, delay);
+        };
+      }
+
+      /**
+       * @description 节流函数
+       * @param func 传入函数
+       * @param delay 指定时间，默认1000ms
+       * @param last 是否执行最后一次
+       */
+      function throttle(func, delay = 2000, last = false) {
+        if (func.constructor !== Function) {
+          throw new Error("func no function");
+        }
+        let timer = null;
+        let now = null;
+
+        return function () {
+          let newDelay = delay;
+          const self = this;
+          const args = arguments;
+          // TODO: 执行最后一次
+          if (last) {
+            !now && (now = Date.now());
+            newDelay = newDelay - (Date.now() - now);
+            clearTimeout(timer);
+          } else {
+            if (timer !== null) return;
+          }
+          timer = setTimeout(function () {
+            func.apply(self, args);
+            clearTimeout(timer);
+            timer = null;
+            now = null;
+          }, newDelay);
+        };
+      }
+
+      const ajax = throttle(
+        function (a) {
+          console.log("请求", a);
+        },
+        2000,
+        true
+      );
+      let i = 1;
+      document.getElementById("btn").onclick = function () {
+        ajax.apply(this, [i++]);
+      };
+    </script>
+  </body>
+</html>

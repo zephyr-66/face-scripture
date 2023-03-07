@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>vue-reactivity</title>
+  </head>
+  <body>
+    <div id="app">
+      {{msg}} <br />
+      <input v-model="msg" type="text" />
+      <button id="btn">fetch</button>
+    </div>
+    <script src="./dep.js"></script>
+    <script src="./watcher.js"></script>
+    <script src="./compiler.js"></script>
+    <script src="./observer.js"></script>
+    <script src="./vue.js"></script>
+    <script>
+      let vm = new Vue({
+        el: "#app",
+        data: {
+          msg: "123",
+          age: 21,
+        },
+      });
+    </script>
+  </body>
+</html>

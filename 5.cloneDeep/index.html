@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>5.cloneDeep</title>
+    <style>
+      #app {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <ul class="list"></ul>
+      <ul class="clone-list"></ul>
+      <ul class="deep-list"></ul>
+    </div>
+    <div>
+      <button id="add">原数组新增</button>
+      <button id="clone">拷贝</button>
+      <button id="clone-add">往拷贝添加</button>
+      <button id="deep">深拷贝</button>
+      <button id="deep-add">深拷贝添加</button>
+    </div>
+    <script type="text/javascript">
+      function render(el, data) {
+        el.innerHTML = data.map((item) => `<li>${item}</li>`).join("");
+      }
+      const list = ["苏州1", "苏州2", "苏州3"];
+      let cloneList = []; // 拷贝
+      let deepList = []; // 深拷贝
+      const ul = document.querySelector(".list");
+      const cloneUl = document.querySelector(".clone-list");
+      const deepUl = document.querySelector(".deep-list");
+
+      function renderALl() {
+        render(ul, list);
+        render(cloneUl, cloneList);
+        render(deepUl, deepList);
+        console.log("list", list);
+        console.log("cloneList", cloneList);
+        console.log("deepList", deepList);
+      }
+
+      renderALl();
+
+      document.getElementById("add").onclick = function () {
+        list.push(`原数组新增${list.length + 1}`);
+        renderALl();
+      };
+      document.getElementById("clone").onclick = function () {
+        if (cloneList.length > 0) {
+          window.alert("已经拷贝了，请勿重复操作！");
+          return;
+        }
+        cloneList = list;
+        renderALl();
+      };
+      document.getElementById("clone-add").onclick = function () {
+        cloneList.push(`浅拷贝新增${cloneList.length + 1}`);
+        renderALl();
+      };
+
+      function deepClone(data) {
+        if (typeof data !== "object") {
+          return data;
+        }
+        let target = data.constructor === Array ? [] : {};
+        target = Object.assign(target, data);
+        Object.keys(target).forEach(function (key) {
+          target[key] = target[key] && deepClone(target[key]);
+        });
+        return target;
+      }
+      document.getElementById("deep").onclick = function () {
+        if (deepList.length > 0) {
+          window.alert("已经拷贝了，请勿重复操作！");
+          return;
+        }
+        deepList = deepClone(list);
+        renderALl();
+      };
+      document.getElementById("deep-add").onclick = function () {
+        deepList.push(`深拷贝新增${deepList.length + 1}`);
+        renderALl();
+      };
+
+      const originObj = {
+        name: "axuebin",
+        age: null,
+        sayHello: function () {
+          console.log("Hello World");
+        },
+      };
+      // const cloneObj = JSON.parse(JSON.stringify(originObj));
+      const cloneObj = deepClone(originObj);
+      console.log(cloneObj);
+    </script>
+  </body>
+</html>

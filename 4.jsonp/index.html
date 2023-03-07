@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>jsonp</title>
+  </head>
+  <body>
+    <div class="app">
+      <button id="fetch" type="button">fetch</button>
+    </div>
+    <script>
+      /**
+       * @description JSONP
+       * @param url 请求地址
+       */
+      function request(url) {
+        const script = document.createElement("script");
+        script.src = url;
+        script.onload = function () {
+          script.remove();
+        };
+        document.body.appendChild(script);
+      }
+
+      function fetchUserInfo(rsp) {
+        console.log(rsp);
+      }
+
+      document.getElementById("fetch").onclick = function () {
+        // fetch('http://127.0.0.1:8080/jsonp?fcn=fetchUserInfo') // CORS error
+        request("http://127.0.0.1:8080/jsonp?fcn=fetchUserInfo"); // [{...}]
+      };
+    </script>
+  </body>
+</html>

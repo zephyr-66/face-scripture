@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>js-extends</title>
+  </head>
+  <body>
+    <script>
+      class Person {
+        constructor(name, age) {
+          this.name = name;
+          this.age = age;
+        }
+        getInfo() {
+          console.log(`我叫${this.name}，今年${this.age}岁`);
+        }
+      }
+      class Student extends Person {
+        constructor(name, age, studentNumber) {
+          super(name, age);
+          this.studentNumber = studentNumber;
+        }
+        getStudentNumber() {
+          return this.studentNumber;
+        }
+      }
+
+      let stu1 = new Student("张三", 19, "No.46");
+      stu1.getInfo(); // 我叫张三，今年19岁
+      let studentPrototype = Object.getPrototypeOf(stu1);
+      console.log(studentPrototype); // Person {constructor: ƒ, getStudentNumber: ƒ}
+      console.log(studentPrototype === Student.prototype); // true
+      console.log(Person.prototype === Object.getPrototypeOf(studentPrototype)); // true
+
+      console.log("-------------------Object.create-------------------------");
+
+      function PersonObj(name, age) {
+        this.name = name;
+        this.age = age;
+      }
+
+      PersonObj.prototype.getInfo = function () {
+        console.log(`我叫${this.name}，今年${this.age}岁`);
+      };
+
+      function Teacher(name, age, salary) {
+        PersonObj.call(this, name, age);
+        this.salary = salary;
+      }
+
+      Teacher.prototype = Object.create(PersonObj.prototype, {
+        constructor: {
+          value: Teacher,
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        },
+      });
+      let tea1 = new Teacher("李老师", 35, 6000);
+      console.log(tea1); // Teacher {name: '李老师', age: 35, salary: 6000}
+      tea1.getInfo(); // 我叫李老师，今年35岁
+    </script>
+  </body>
+</html>
