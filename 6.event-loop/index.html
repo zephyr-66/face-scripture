@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>6.event-loop</title>
+  </head>
+  <body>
+    <script>
+      // 事件循环
+      // 1.js是一门单线程语言，因为要是多个线程同时操作dom，浏览器无法决定采用哪个线程的操作
+      // 2.如果执行耗时的操作，会造成页面卡顿，带来不好的体验，于是js采用 “异步与回调”
+      // 3.异步就是，当js执行网络请求、计时器、事件监听等，主线程会交给其他线程去处理，自身继续执行下面的任务，
+      // 当其他线程结束，会将回调函数加入到任务队列中，等待执行
+      // 4.w3c规定每个任务都要有任务类型，相同的任务类型需要放到一个队列中，必须要有微任务队列，且优先级最高
+      // 5.主线程会开启一个死循环，根据队列的优先级进行取任务执行，每当执行完一个任务都先取微队列的任务，在取其他任务队列。
+      // 6.一般来说为 “微队列 > 用户操作队列 >其他队列”，浏览器的不同会有些许的不同
+      // 7.清空任务后，主线程会进行休眠，等待任务唤醒
+      async function async1() {
+        console.log("async1 start");
+        await async2();
+        console.log("asnyc1 end");
+      }
+      async function async2() {
+        console.log("async2");
+      }
+      console.log("script start");
+      setTimeout(() => {
+        console.log("setTimeOut");
+      }, 0);
+      async1();
+      new Promise(function (reslove) {
+        console.log("promise1");
+        reslove();
+      }).then(function () {
+        console.log("promise2");
+      });
+      console.log("script end");
+
+      // console.log("script start");
+      // console.log("async1 start");
+      // console.log("async2");
+      // console.log("promise1");
+      // console.log("script end");
+      // console.log("asnyc1 end");
+      // console.log("promise2");
+      // console.log("setTimeOut");
+    </script>
+  </body>
+</html>
