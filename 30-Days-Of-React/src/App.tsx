@@ -1,26 +1,11 @@
 import { useState, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
+import MapJsx from "./components/map-jsx";
 
-const obj = {
-  count: 0,
-};
-const vm: any = {};
 function App() {
   const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    Object.defineProperty(vm, "count", {
-      get() {
-        console.log("get");
-        return obj.count;
-      },
-      set(newValue: any) {
-        obj.count = newValue;
-        console.log("set", newValue, obj);
-      },
-    });
-  }, []);
+  const [number, setNumber] = useState(1);
 
   return (
     <div className="App">
@@ -37,18 +22,11 @@ function App() {
         <button
           onClick={() => {
             setCount((count) => count + 1);
-            console.log("vm.count", vm.count);
           }}
         >
           count is {count}
         </button>
-        <button
-          onClick={() => {
-            vm.count++;
-          }}
-        >
-          加一
-        </button>
+        <button onClick={() => setNumber(number + 1)}>子组件+{number}</button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
@@ -56,6 +34,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <MapJsx number={number} />
     </div>
   );
 }
